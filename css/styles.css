@@ -1,0 +1,120 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background-color: #000000;
+}
+
+table {
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-collapse: collapse;
+    width: 30%;  
+    height: 60%;
+    opacity: 1;
+    text-align: center;
+    background-color: rgb(12, 12, 12);
+}
+
+caption {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #00ff00;
+}
+
+input {
+    border: 1px solid #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    color: #00ff00;
+    background-color: rgb(12, 12, 12);
+    margin-top: 15px; 
+    text-align: center;
+    border-radius: 20px;
+}
+
+#ipCompleta{
+    border: 1px solid #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    color: #00ff00;
+    background-color: rgb(12, 12, 12);
+    margin-top: 15px; 
+    text-align: center;
+    border-radius: 20px;
+}
+#calcular {
+    background-color: #00ff00;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+#calcular:hover {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+#resultado {
+    color: #00ff00;
+    margin-top: 20px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#video-fondo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    object-fit: cover;
+    opacity: 0.25;
+    pointer-events: none;
+    }
+    .ip{
+        color:#00ff00;
+        margin-top: 4%;
+    }
+
+    #cerrarVentana {
+
+        background-color: #00ff00;
+        border: none;
+        font-family: 'Orbitron';
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        margin-left: 45%;
+        padding: 10px;
+        cursor: pointer;
+    }
+    #resultados {
+        width: 70%;
+        margin-top: 5%;
+        margin-bottom: 5%;
+        padding: 20px;
+        border: 2px solid #00ff00;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        opacity: 1;
+        color: rgba(0, 0, 0, 0.8);
+        font-family: 'Orbitron';
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #00ff00;
+        display: block;
+        position: fixed;
+        scrollbar-color: #00ff00 #000000; /* Scrollbar color */
+        max-height: 80%; /* Limit the height */
+        overflow-y: auto; /* Add vertical scroll if content overflows */
+        scrollbar-color: #00ff00 rgba(0, 0, 0, 0.8); /* Set green scroll color */
+        scrollbar-width: auto; /* Make the scrollbar thinner */
+    }

@@ -81,6 +81,7 @@ document.getElementById('calcular').addEventListener('click', () => {
             mascaraCompleta = 'N/A';
             direccionRedBinario = 'N/A';
             direccionRedDec = 'N/A';
+            // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
             mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario);
             
         }else{
@@ -132,6 +133,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
         let direccionRedBinario = `${redbin1}.${redbin2}.${redbin3}.${redbin4}`
         let direccionRedDec = decimal(redbin1, redbin2, redbin3, redbin4); 
+        // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
         mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario);
         }
 
@@ -158,7 +160,7 @@ document.getElementById('calcular').addEventListener('click', () => {
     
 
         
-    // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
+    
     
 });
 

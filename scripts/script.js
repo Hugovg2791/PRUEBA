@@ -37,11 +37,13 @@ document.getElementById('calcular').addEventListener('click', () => {
     const [octeto1, octeto2, octeto3, octeto4] = octetos;
     const ip = `${octeto1}.${octeto2}.${octeto3}.${octeto4}`;
     let clase = '';
-    let mascara = '';
-    let direccion = '';
     let wildcard = '';
-
-
+    let mascara = '';
+    let mascaraCompleta = '';
+    let direccionRedBinario = '';
+    let direccionRedDec = '';
+        //pasar a binario la ip
+        const binarioCompleto = binario(octeto1, octeto2, octeto3, octeto4);
 
     //CALCULOS 
         //calculos clase y mascara
@@ -56,13 +58,10 @@ document.getElementById('calcular').addEventListener('click', () => {
             mascara = '255.255.255.0';
         } else if (octeto1 >= 224 && octeto1 <= 239) {
             clase = 'Clase D (Multicast)';
-            mascara = 'No tiene (Multicast)';
         } else if (octeto1 >= 240 && octeto1 <= 255) {
             clase = 'Clase E (Experimental)';
-            mascara = 'No tiene (Experimental)';
         } else {
             clase = 'Clase desconocida';
-            mascara = 'no tiene';
         }
 
         // Direccion privada o pública
@@ -76,21 +75,71 @@ document.getElementById('calcular').addEventListener('click', () => {
             direccion = 'Pública';
         }
 
-        // Calcular wildcard
+        if(clase === 'Clase D (Multicast)' || clase === 'Clase E (Experimental)' || clase === 'Clase desconocida'){
+            wildcard = 'N/A';
+            mascara = 'N/A';
+            mascaraCompleta = 'N/A';
+            direccionRedBinario = 'N/A';
+            direccionRedDec = 'N/A';
+            mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario);
+            
+        }else{
+         // Calcular wildcard
         const [w1, w2, w3, w4] = mascara.split('.').map(Number);
         const max = '255.255.255.255';
         const [max1, max2, max3, max4] = max.split('.').map(Number);
         wildcard = `${max1 - w1}.${max2 - w2}.${max3 - w3}.${max4 - w4}`;
-        if (clase === 'clase D (Multicast)' || clase === 'Clase E (Experimental)' || clase === 'Clase desconocida') {
-            wildcard = 'N/A';
+  
+
+            //pasar a binario la mascara de red
+            const mascaraCompleta = binario(w1, w2, w3, w4);
+
+        //Calcular direccion de red
+        const [ib1, ib2, ib3, ib4] = binarioCompleto.split('.');
+        const [mb1, mb2, mb3, mb4] = mascaraCompleta.split('.');
+        let redbin1 = ''
+        for (i = 0; i<8; i++){
+            if(ib1[i] === '1' && mb1[i] === '1'){
+                redbin1 += '1';              
+            }else{
+                redbin1 += '0';
+            }
         }
-    //PASOS A BINARIO
-        //pasar a binario la ip
-        const binarioCompleto = binarioIP(octeto1, octeto2, octeto3, octeto4);
+        let redbin2 = ''
+         for (i = 0; i<8; i++){
+            if(ib2[i] === '1' && mb2[i] === '1'){
+                redbin2 += '1';              
+            }else{
+                redbin2 += '0';
+            }
+        }
+        let redbin3 = ''
+         for (i = 0; i<8; i++){
+            if(ib3[i] === '1' && mb3[i] === '1'){
+                redbin3 += '1';              
+            }else{
+                redbin3 += '0';
+            }
+        }
+        let redbin4 = ''
+         for (i = 0; i<8; i++){
+            if(ib4[i] === '1' && mb4[i] === '1'){
+                redbin4 += '1';              
+            }else{
+                redbin4 += '0';
+            }
+        }
 
-    //FUNCIONES PARA CONVERTIR A BINARIO    
+        let direccionRedBinario = `${redbin1}.${redbin2}.${redbin3}.${redbin4}`
+        let direccionRedDec = decimal(redbin1, redbin2, redbin3, redbin4); 
+        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario);
+        }
 
-    function binarioIP(n1, n2, n3, n4) {
+        
+
+        
+    //FUNCIONES PARA CONVERTIR A BINARIO, DECIMAL
+    function binario(n1, n2, n3, n4) {
         let bin = n1.toString(2); 
         let bin2 = n2.toString(2);
         let bin3 = n3.toString(2);
@@ -98,17 +147,26 @@ document.getElementById('calcular').addEventListener('click', () => {
         const resultado = `${bin.padStart(8, '0')}.${bin2.padStart(8, '0')}.${bin3.padStart(8, '0')}.${bin4.padStart(8, '0')}`; //agregar ceros a la izquierda hasta llegar a 8 car
         return resultado;
         }
+    function decimal(n1, n2, n3, n4){
+        let dec = parseInt(n1, 2);
+        let dec2 = parseInt(n2, 2);
+        let dec3 = parseInt(n3, 2);
+        let dec4 = parseInt(n4, 2);
+        const resultado = `${dec}.${dec2}.${dec3}.${dec4}`
+        return resultado;
+    }
+    
 
         
     // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-    mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto);
+    
 });
 
 
 
 
 //función para mostrar la ventana emergente
-function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto) {
+function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario) {
     const ventanaEmergente = document.createElement('div');
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
@@ -117,8 +175,9 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
     ventanaEmergente.innerHTML = `
     <h2>Detalles de la IP</h2>
     <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompleto}</p>
-    <p style="margin-bottom: 25px;"><strong>Máscara por defecto:</strong> ${mascara}</p>
+    <p style="margin-bottom: 25px;"><strong>Máscara por defecto:</strong> ${mascara} <br><strong>Binario: </strong>${mascaraCompleta}</p>
     <p><strong>Wildcard:</strong> ${wildcard}</p>
+    <p><strong>Dirección de red:</strong>${direccionRedDec}<br><strong>Binario: </strong>${direccionRedBinario}</p>
     <p><strong>Clase:</strong> ${clase}</p>
     <button id="cerrarVentana">Cerrar</button>
     `;

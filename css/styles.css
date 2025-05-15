@@ -12,8 +12,8 @@ table {
     border: 2px solid #00ff00;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
     border-collapse: collapse;
-    width: 30%;  
-    height: 60%;
+    width: 50%;    /* Aumentado de 30% a 50% */
+    height: 75%;   /* Aumentado de 60% a 75% */
     opacity: 1;
     text-align: center;
     background-color: rgb(12, 12, 12);
@@ -26,15 +26,6 @@ caption {
     color: #00ff00;
 }
 
-input {
-    border: 1px solid #00ff00;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    color: #00ff00;
-    background-color: rgb(12, 12, 12);
-    margin-top: 15px; 
-    text-align: center;
-    border-radius: 20px;
-}
 
 #ipCompleta{
     border: 1px solid #00ff00;
@@ -44,6 +35,10 @@ input {
     margin-top: 15px; 
     text-align: center;
     border-radius: 20px;
+    width: 30%;
+    height: 50px;
+    font-size: 45px;
+
 }
 #calcular {
     background-color: #00ff00;
@@ -53,6 +48,8 @@ input {
     cursor: pointer;
     border-radius: 6px;
     font-family: 'Orbitron', sans-serif;
+    width: 200px;
+    height: 75px;
 }
 
 #calcular:hover {
@@ -118,3 +115,4 @@ input[type="number"]::-webkit-outer-spin-button {
         scrollbar-color: #00ff00 rgba(0, 0, 0, 0.8); /* Set green scroll color */
         scrollbar-width: auto; /* Make the scrollbar thinner */
     }
+

@@ -42,6 +42,7 @@ document.getElementById('calcular').addEventListener('click', () => {
     let wildcard = '';
 
 
+
     //CALCULOS 
         //calculos clase y mascara
         if (octeto1 >= 1 && octeto1 <= 126) {
@@ -83,14 +84,31 @@ document.getElementById('calcular').addEventListener('click', () => {
         if (clase === 'clase D (Multicast)' || clase === 'Clase E (Experimental)' || clase === 'Clase desconocida') {
             wildcard = 'N/A';
         }
+    //PASOS A BINARIO
+        //pasar a binario la ip
+        const binarioCompleto = binarioIP(octeto1, octeto2, octeto3, octeto4);
+
+    //FUNCIONES PARA CONVERTIR A BINARIO    
+
+    function binarioIP(n1, n2, n3, n4) {
+        let bin = n1.toString(2); 
+        let bin2 = n2.toString(2);
+        let bin3 = n3.toString(2);
+        let bin4 = n4.toString(2);
+        const resultado = `${bin.padStart(8, '0')}.${bin2.padStart(8, '0')}.${bin3.padStart(8, '0')}.${bin4.padStart(8, '0')}`; //agregar ceros a la izquierda hasta llegar a 8 car
+        return resultado;
+        }
 
         
     // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-    mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard);
+    mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto);
 });
 
+
+
+
 //función para mostrar la ventana emergente
-function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard) {
+function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto) {
     const ventanaEmergente = document.createElement('div');
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
@@ -98,7 +116,7 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard) {
 
     ventanaEmergente.innerHTML = `
     <h2>Detalles de la IP</h2>
-    <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})</p>
+    <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompleto}</p>
     <p style="margin-bottom: 25px;"><strong>Máscara por defecto:</strong> ${mascara}</p>
     <p><strong>Wildcard:</strong> ${wildcard}</p>
     <p><strong>Clase:</strong> ${clase}</p>

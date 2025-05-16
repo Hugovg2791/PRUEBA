@@ -18,8 +18,8 @@ input.addEventListener('input', () => {
         input.style.borderColor = 'red';
         input.style.boxShadow = '0 0 5px red';
         input.style.color = 'red';
-        cidr.value = '';  
-        return;          
+        cidr.value = '';  // Limpiamos CIDR si IP no es válida
+        return;           // Salimos para no procesar más
     }
 
     // Si la IP es válida, ponemos estilos verdes
@@ -33,14 +33,14 @@ input.addEventListener('input', () => {
     if (primerOcteto >= 1 && primerOcteto <= 126) {
         cidrValue = 8;
     } else if (primerOcteto === 127) {
-        
+        // 127 es loopback, podrías manejarlo especial si quieres
         cidrValue = 'Loopback';
     } else if (primerOcteto >= 128 && primerOcteto <= 191) {
         cidrValue = 16;
     } else if (primerOcteto >= 192 && primerOcteto <= 223) {
         cidrValue = 24;
     } else {
-        cidrValue = 'Rango no soportado';  
+        cidrValue = 'Rango no soportado';  // O simplemente vacio
     }
 
     cidr.value = cidrValue;
@@ -263,6 +263,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
         let direccionBroadcastBin = `${broadBin1}.${broadBin2}.${broadBin3}.${broadBin4}`;
         let direccionBroadcastDec = decimal(broadBin1, broadBin2, broadBin3, broadBin4);
+
         //calcular numero de subredes
         if (clase === 'Clase A'){
             let defmasc = 8;
@@ -274,9 +275,8 @@ document.getElementById('calcular').addEventListener('click', () => {
 
         let bitsExtra = cidrval - defmasc;
         numSubRed = Math.pow(2, bitsExtra);
-        
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed);
+        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts);
         }
 
         

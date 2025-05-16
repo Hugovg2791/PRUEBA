@@ -180,6 +180,8 @@ document.getElementById('calcular').addEventListener('click', () => {
         let direccionBroadcastBin = `${broadBin1}.${broadBin2}.${broadBin3}.${broadBin4}`;
         let direccionBroadcastDec = decimal(broadBin1, broadBin2, broadBin3, broadBin4);
 
+        //Calcular numero de hosts
+        
 
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
         mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin);
@@ -221,8 +223,12 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
 
-
+    // Leyenda en la esquina superior derecha
     ventanaEmergente.innerHTML = `
+    <div style="position: absolute; top: 10px; right: 15px; font-size: 17px; color: #333;">
+        <span>🟥: red</span> &nbsp; 
+        <span>🟩: host</span>
+    </div>
     <h2>Detalles de la IP</h2>
     <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompleto}</p>
     <p style="margin-bottom: 25px;"><strong>Máscara por defecto:</strong> ${mascara} <br><strong>Binario: </strong>${mascaraCompleta}</p>

@@ -40,6 +40,10 @@ caption {
     font-size: 45px;
 
 }
+#ip-inputs{
+    color: #00ff00;
+    font-size: 45px;
+}
 #calcular {
     background-color: #00ff00;
     color: rgb(0, 0, 0);

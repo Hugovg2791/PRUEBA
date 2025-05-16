@@ -263,10 +263,20 @@ document.getElementById('calcular').addEventListener('click', () => {
 
         let direccionBroadcastBin = `${broadBin1}.${broadBin2}.${broadBin3}.${broadBin4}`;
         let direccionBroadcastDec = decimal(broadBin1, broadBin2, broadBin3, broadBin4);
+        //calcular numero de subredes
+        if (clase === 'Clase A'){
+            let defmasc = 8;
+        }else if(clase === 'Clase B'){
+            defmasc = 16;
+        }else if(clase === 'Clase C'){
+            defmasc = 24;
+        }
 
+        let bitsExtra = cidrval - defmasc;
+        numSubRed = Math.pow(2, bitsExtra);
         
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts);
+        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed);
         }
 
         

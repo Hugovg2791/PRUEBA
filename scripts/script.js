@@ -168,12 +168,14 @@ document.getElementById('calcular').addEventListener('click', () => {
             wildcardBinario = 'N/A'
             direccionBroadcastDec = 'N/A'
             direccionBroadcastBin = 'N/A'
+            numSubRed = 'N/A'
             
 
 
             
             // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-            mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts);
+            mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta,
+                 direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed);
             
         }else{
          // Calcular wildcard
@@ -276,7 +278,8 @@ document.getElementById('calcular').addEventListener('click', () => {
         let bitsExtra = cidrval - defmasc;
         numSubRed = Math.pow(2, bitsExtra);
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts);
+        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta,
+             direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed);
         }
 
         
@@ -310,7 +313,8 @@ document.getElementById('calcular').addEventListener('click', () => {
 
 
 //función para mostrar la ventana emergente
-function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts) {
+function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, 
+    direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed) {
     const ventanaEmergente = document.createElement('div');
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
@@ -329,6 +333,7 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
     <p><strong>Dirección de broadcast:</strong>${direccionBroadcastDec}<br><strong>Binario: </strong>${direccionBroadcastBin}</p>
     <p><strong>Clase:</strong> ${clase}</p>
     <p><strong>Nº Hosts:</strong>${numHosts}</p>
+    <p><strong>Nº De Subredes</strong> ${numSubRed}</p>
     <button id="cerrarVentana">Cerrar</button>
     `;
 

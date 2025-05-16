@@ -81,8 +81,15 @@ document.getElementById('calcular').addEventListener('click', () => {
             mascaraCompleta = 'N/A';
             direccionRedBinario = 'N/A';
             direccionRedDec = 'N/A';
+            wildcardBinario = 'N/A'
+            direccionBroadcastDec = 'N/A'
+            direccionBroadcastBin = 'N/A'
+            
+
+
+            
             // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-            mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario);
+            mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin);
             
         }else{
          // Calcular wildcard
@@ -90,12 +97,13 @@ document.getElementById('calcular').addEventListener('click', () => {
         const max = '255.255.255.255';
         const [max1, max2, max3, max4] = max.split('.').map(Number);
         wildcard = `${max1 - w1}.${max2 - w2}.${max3 - w3}.${max4 - w4}`;
-  
+        //Pasar a binario la wildcard
+        const wildcardBinario = binario(max1 - w1, max2 - w2, max3 - w3, max4 - w4)
 
             //pasar a binario la mascara de red
             const mascaraCompleta = binario(w1, w2, w3, w4);
 
-        //Calcular direccion de red
+        //Calcular dirección de red
         const [ib1, ib2, ib3, ib4] = binarioCompleto.split('.');
         const [mb1, mb2, mb3, mb4] = mascaraCompleta.split('.');
         let redbin1 = ''
@@ -131,10 +139,50 @@ document.getElementById('calcular').addEventListener('click', () => {
             }
         }
 
-        let direccionRedBinario = `${redbin1}.${redbin2}.${redbin3}.${redbin4}`
+        let direccionRedBinario = `${redbin1}.${redbin2}.${redbin3}.${redbin4}`;
         let direccionRedDec = decimal(redbin1, redbin2, redbin3, redbin4); 
+
+        //Calcular dirección de Broadcast
+        const [wb1, wb2, wb3, wb4] = wildcardBinario.split('.');
+        let broadBin1 = ''
+        for (i = 0; i<8; i++){
+            if(redbin1[i] === '0' && wb1[i] === '0'){
+                broadBin1 += '0';
+            }else{
+                broadBin1 += '1';
+            }
+        }
+        let broadBin2 = ''
+        for (i = 0; i<8; i++){
+            if(redbin2[i] === '0' && wb2[i] === '0'){
+                broadBin2 += '0';
+            }else{
+                broadBin2 += '1';
+            }
+        }
+        let broadBin3 = ''
+        for (i = 0; i<8; i++){
+            if(redbin3[i] === '0' && wb3[i] === '0'){
+                broadBin3 += '0';
+            }else{
+                broadBin3 += '1';
+            }
+        }
+        let broadBin4 = ''
+        for (i = 0; i<8; i++){
+            if(redbin4[i] === '0' && wb4[i] === '0'){
+                broadBin4 += '0';
+            }else{
+                broadBin4 += '1';
+            }
+        }
+
+        let direccionBroadcastBin = `${broadBin1}.${broadBin2}.${broadBin3}.${broadBin4}`;
+        let direccionBroadcastDec = decimal(broadBin1, broadBin2, broadBin3, broadBin4);
+
+
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario);
+        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin);
         }
 
         
@@ -168,7 +216,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
 
 //función para mostrar la ventana emergente
-function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario) {
+function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin) {
     const ventanaEmergente = document.createElement('div');
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
@@ -178,8 +226,9 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
     <h2>Detalles de la IP</h2>
     <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompleto}</p>
     <p style="margin-bottom: 25px;"><strong>Máscara por defecto:</strong> ${mascara} <br><strong>Binario: </strong>${mascaraCompleta}</p>
-    <p><strong>Wildcard:</strong> ${wildcard}</p>
+    <p><strong>Wildcard:</strong> ${wildcard}<br><strong>Binario: </strong>${wildcardBinario}</p>
     <p><strong>Dirección de red:</strong>${direccionRedDec}<br><strong>Binario: </strong>${direccionRedBinario}</p>
+    <p><strong>Dirección de broadcast:</strong>${direccionBroadcastDec}<br><strong>Binario: </strong>${direccionBroadcastBin}</p>
     <p><strong>Clase:</strong> ${clase}</p>
     <button id="cerrarVentana">Cerrar</button>
     `;

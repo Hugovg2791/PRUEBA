@@ -89,6 +89,8 @@ document.getElementById('calcular').addEventListener('click', () => {
     let direccionRedDec = '';
         //pasar a binario la ip
         const binarioCompleto = binario(octeto1, octeto2, octeto3, octeto4);
+        //pasar a hexadecimal la ip
+        const iphexa = Hexadecimal(octeto1, octeto2, octeto3, octeto4);
        // Diferenciar host y red en binario
         let binarioColores = '';
         const binariosSinPuntos = binarioCompleto.replace(/\./g, '');
@@ -177,7 +179,7 @@ document.getElementById('calcular').addEventListener('click', () => {
             
             // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
             mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta,
-                 direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax);
+                 direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax, iphexa);
             
         }else{
          // Calcular wildcard
@@ -302,7 +304,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
         mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta,
-             direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax);
+             direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax, iphexa);
         }
 
         
@@ -325,6 +327,14 @@ document.getElementById('calcular').addEventListener('click', () => {
         const resultado = `${dec}.${dec2}.${dec3}.${dec4}`
         return resultado;
     }   
+    function Hexadecimal(n1, n2, n3, n4) {
+        let h1 = n1.toString(16).padStart(2, '0');
+        let h2 = n2.toString(16).padStart(2, '0');
+        let h3 = n3.toString(16).padStart(2, '0');
+        let h4 = n4.toString(16).padStart(2, '0');
+        return `${h1}.${h2}.${h3}.${h4}`.toUpperCase(); 
+}
+
 
 });
 
@@ -333,7 +343,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
 //función para mostrar la ventana emergente
 function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, 
-    direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax) {
+    direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax, iphexa) {
     const ventanaEmergente = document.createElement('div');
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
@@ -345,7 +355,7 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
         <span>🟩: host</span>
     </div>
     <h2>Detalles de la IP</h2>
-    <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompletoColoreado}</p>
+    <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompletoColoreado}<br><strong>Hexadecimal:</strong>${iphexa}</p>
     <p style="margin-bottom: 25px;"><strong>Máscara por defecto:</strong> ${mascara} <br><strong>Binario: </strong>${mascaraCompleta}</p>
     <p><strong>Wildcard:</strong> ${wildcard}<br><strong>Binario: </strong>${wildcardBinario}</p>
     <p><strong>Dirección de red:</strong>${direccionRedDec}<br><strong>Binario: </strong>${direccionRedBinario}</p>

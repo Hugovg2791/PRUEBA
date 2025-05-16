@@ -1,7 +1,7 @@
 const inputs = document.querySelectorAll('#octeto1, #octeto2, #octeto3, #octeto4');
 const input = document.getElementById('ipCompleta');
 const cidr = document.getElementById('cidr');
-const cidrval = document.getElementById('cidr').value;
+
 
 
 input.addEventListener('input', () => {
@@ -37,15 +37,18 @@ cidr.addEventListener('input', () => {
 });
 
 document.getElementById('calcular').addEventListener('click', () => {
+    const cidrInput = document.getElementById('cidr').value.trim();
+    const cidrval = parseInt(cidrInput, 10);
     const ipCompleta = document.getElementById('ipCompleta').value.trim();
     const octetos = ipCompleta.split('.').map(octeto => parseInt(octeto));
     const resultadoDiv = document.getElementById('resultado');
 
     if (
         octetos.length !== 4 || 
-        octetos.some(octeto => isNaN(octeto) || octeto < 0 || octeto > 255)
+        octetos.some(octeto => isNaN(octeto) || octeto < 0 || octeto > 255) ||
+        isNaN(parseInt(cidr.value)) || cidr.value.trim() === '' || parseInt(cidr.value) < 8 || parseInt(cidr.value) > 30
     ) {
-        resultadoDiv.innerHTML = '<p class="error">Por favor, ingresa una dirección IP válida con 4 octetos separados por puntos.</p>';
+        resultadoDiv.innerHTML = '<p class="error">Por favor, ingresa una dirección IP y un protocolo CIDR válidos.</p>';
         return;
     } else {
         resultadoDiv.innerHTML = ''; // limpiar errores previos
@@ -61,6 +64,40 @@ document.getElementById('calcular').addEventListener('click', () => {
     let direccionRedDec = '';
         //pasar a binario la ip
         const binarioCompleto = binario(octeto1, octeto2, octeto3, octeto4);
+       // Diferenciar host y red en binario
+        let binarioColores = '';
+        const binariosSinPuntos = binarioCompleto.replace(/\./g, '');
+
+        for (let i = 0; i < binariosSinPuntos.length; i++) {
+            if (i < cidrval) {
+                binarioColores += '<span style="color: #ff0000;">' + binariosSinPuntos[i] + '</span>';
+            } else {
+                binarioColores += '<span style="color: #00ff00;">' + binariosSinPuntos[i] + '</span>';
+            }
+        }
+
+        // Insertar puntos cada 8 bits reales
+        let binarioColoresConPuntos = '';
+        let bitCounter = 0;
+        let tag = false;
+
+        for (let i = 0; i < binarioColores.length; i++) {
+            const char = binarioColores[i];
+            binarioColoresConPuntos += char;
+
+            if (char === '<') {
+                tag = true;
+            } else if (char === '>') {
+                tag = false;
+            } else if (!tag) {
+                bitCounter++;
+                if (bitCounter % 8 === 0 && bitCounter !== 32) {
+                    binarioColoresConPuntos += '.';
+                }
+            }
+        }
+
+        const binarioCompletoColoreado = binarioColoresConPuntos;
 
     //CALCULOS 
         //calculos clase y mascara
@@ -91,6 +128,11 @@ document.getElementById('calcular').addEventListener('click', () => {
         } else {
             direccion = 'Pública';
         }
+        //Calcular numero de hosts
+        
+        let bits_host = 32 - cidrval;
+        let total_direcciones = Math.pow(2, bits_host);
+        numHosts = total_direcciones - 2;
 
         if(clase === 'Clase D (Multicast)' || clase === 'Clase E (Experimental)' || clase === 'Clase desconocida'){
             wildcard = 'N/A';
@@ -106,7 +148,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
             
             // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-            mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin);
+            mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts);
             
         }else{
          // Calcular wildcard
@@ -197,11 +239,9 @@ document.getElementById('calcular').addEventListener('click', () => {
         let direccionBroadcastBin = `${broadBin1}.${broadBin2}.${broadBin3}.${broadBin4}`;
         let direccionBroadcastDec = decimal(broadBin1, broadBin2, broadBin3, broadBin4);
 
-        //Calcular numero de hosts
         
-
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
-        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin);
+        mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts);
         }
 
         
@@ -235,7 +275,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
 
 //función para mostrar la ventana emergente
-function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompleto, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin) {
+function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts) {
     const ventanaEmergente = document.createElement('div');
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
@@ -247,12 +287,13 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
         <span>🟩: host</span>
     </div>
     <h2>Detalles de la IP</h2>
-    <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompleto}</p>
+    <p style="margin-bottom: 25px;"><strong>IP:</strong> ${ip} (${direccion})<br><strong>Binario: </strong>${binarioCompletoColoreado}</p>
     <p style="margin-bottom: 25px;"><strong>Máscara por defecto:</strong> ${mascara} <br><strong>Binario: </strong>${mascaraCompleta}</p>
     <p><strong>Wildcard:</strong> ${wildcard}<br><strong>Binario: </strong>${wildcardBinario}</p>
     <p><strong>Dirección de red:</strong>${direccionRedDec}<br><strong>Binario: </strong>${direccionRedBinario}</p>
     <p><strong>Dirección de broadcast:</strong>${direccionBroadcastDec}<br><strong>Binario: </strong>${direccionBroadcastBin}</p>
     <p><strong>Clase:</strong> ${clase}</p>
+    <p><strong>Nº Hosts:</strong>${numHosts}</p>
     <button id="cerrarVentana">Cerrar</button>
     `;
 

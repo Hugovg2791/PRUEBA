@@ -361,7 +361,8 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
     // Leyenda en la esquina superior derecha
     ventanaEmergente.innerHTML = `
     <div style="position: absolute; top: 10px; right: 15px; font-size: 17px; color: #333;">
-        <span>🟥: red</span> &nbsp; 
+        <span>🟥: red</span> &nbsp;
+        <span>🟧: subred</span> 
         <span>🟩: host</span>
     </div>
     <h2>Detalles de la IP</h2>

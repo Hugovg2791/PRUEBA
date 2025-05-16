@@ -277,6 +277,10 @@ document.getElementById('calcular').addEventListener('click', () => {
 
         let bitsExtra = cidrval - defmasc;
         numSubRed = Math.pow(2, bitsExtra);
+
+        //calcular host minimo
+        let nuevoRedBin = parseInt(redbin4, 2) + 1;
+        let hostMin = `${decimal2(redbin1, redbin2, redbin3)}.${nuevoRedBin}`
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
         mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta,
              direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed);
@@ -301,12 +305,14 @@ document.getElementById('calcular').addEventListener('click', () => {
         let dec4 = parseInt(n4, 2);
         const resultado = `${dec}.${dec2}.${dec3}.${dec4}`
         return resultado;
-    }
-    
-
-        
-    
-    
+    }   
+        function decimal2(n1, n2, n3){
+        let dec = parseInt(n1, 2);
+        let dec2 = parseInt(n2, 2);
+        let dec3 = parseInt(n3, 2);
+        const resultado = `${dec}.${dec2}.${dec3}`
+        return resultado;
+    } 
 });
 
 

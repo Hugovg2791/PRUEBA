@@ -33,15 +33,12 @@ input.addEventListener('input', () => {
     if (primerOcteto >= 1 && primerOcteto <= 126) {
         cidrValue = 8;
     } else if (primerOcteto === 127) {
-        // 127 es loopback, podrías manejarlo especial si quieres
         cidrValue = 'Loopback';
     } else if (primerOcteto >= 128 && primerOcteto <= 191) {
         cidrValue = 16;
     } else if (primerOcteto >= 192 && primerOcteto <= 223) {
         cidrValue = 24;
-    } else {
-        cidrValue = 'Rango no soportado';  // O simplemente vacio
-    }
+    } 
 
     cidr.value = cidrValue;
 });
@@ -91,40 +88,53 @@ document.getElementById('calcular').addEventListener('click', () => {
         const binarioCompleto = binario(octeto1, octeto2, octeto3, octeto4);
         //pasar a hexadecimal la ip
         const iphexa = Hexadecimal(octeto1, octeto2, octeto3, octeto4);
-       // Diferenciar host y red en binario
-        let binarioColores = '';
-        const binariosSinPuntos = binarioCompleto.replace(/\./g, '');
+    // Diferenciar host y red en binario
+    let binarioColores = '';
+    const binariosSinPuntos = binarioCompleto.replace(/\./g, '');
+    // Determinar los bits que corresponden a la red por clase
+    let redPorDefecto = 0;
+    if (octeto1 >= 1 && octeto1 <= 126) redPorDefecto = 8;
+    else if (octeto1 >= 128 && octeto1 <= 191) redPorDefecto = 16;
+    else if (octeto1 >= 192 && octeto1 <= 223) redPorDefecto = 24;
 
-        for (let i = 0; i < binariosSinPuntos.length; i++) {
-            if (i < cidrval) {
-                binarioColores += '<span style="color: #ff0000;">' + binariosSinPuntos[i] + '</span>';
-            } else {
-                binarioColores += '<span style="color: #00ff00;">' + binariosSinPuntos[i] + '</span>';
+    // Determinar cuántos bits de subred hay
+    const bitsSubred = cidrval - redPorDefecto;
+
+    // Recorremos los bits sin puntos y coloreamos según corresponda
+    for (let i = 0; i < binariosSinPuntos.length; i++) {
+        if (i < redPorDefecto) {
+            // Parte de red (rojo)
+            binarioColores += '<span style="color: #ff0000;">' + binariosSinPuntos[i] + '</span>';
+        } else if (i < cidrval) {
+            // Parte de subred (naranja)
+            binarioColores += '<span style="color: orange;">' + binariosSinPuntos[i] + '</span>';
+        } else {
+            // Parte de host (verde)
+            binarioColores += '<span style="color: #00ff00;">' + binariosSinPuntos[i] + '</span>';
+        }
+    }
+
+    // Insertar puntos cada 8 bits, sin romper los tags HTML
+    let binarioCompletoColoreado = '';
+    let bitCounter = 0;
+    let insideTag = false;
+
+    for (let i = 0; i < binarioColores.length; i++) {
+        const char = binarioColores[i];
+        binarioCompletoColoreado += char;
+
+        if (char === '<') {
+            insideTag = true;
+        } else if (char === '>') {
+            insideTag = false;
+        } else if (!insideTag) {
+            // Solo contamos bits fuera de etiquetas
+            bitCounter++;
+            if (bitCounter % 8 === 0 && bitCounter !== 32) {
+                binarioCompletoColoreado += '.';
             }
         }
-
-        // Insertar puntos cada 8 bits reales
-        let binarioColoresConPuntos = '';
-        let bitCounter = 0;
-        let tag = false;
-
-        for (let i = 0; i < binarioColores.length; i++) {
-            const char = binarioColores[i];
-            binarioColoresConPuntos += char;
-
-            if (char === '<') {
-                tag = true;
-            } else if (char === '>') {
-                tag = false;
-            } else if (!tag) {
-                bitCounter++;
-                if (bitCounter % 8 === 0 && bitCounter !== 32) {
-                    binarioColoresConPuntos += '.';
-                }
-            }
-        }
-
-        const binarioCompletoColoreado = binarioColoresConPuntos;
+    }
 
     //CALCULOS 
         //calculos clase y mascara
@@ -374,3 +384,17 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
         ventanaEmergente.remove();
     });
 }
+
+// Función para obtener y poner la IP pública por defecto en el input
+function ponerIpPublicaPorDefecto() {
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.ip) {
+                input.value = data.ip;
+                input.dispatchEvent(new Event('input'));
+            }
+        })
+        .catch(() => {});
+}
+ponerIpPublicaPorDefecto();

@@ -165,17 +165,19 @@ document.getElementById('calcular').addEventListener('click', () => {
             mascaraCompleta = 'N/A';
             direccionRedBinario = 'N/A';
             direccionRedDec = 'N/A';
-            wildcardBinario = 'N/A'
-            direccionBroadcastDec = 'N/A'
-            direccionBroadcastBin = 'N/A'
-            numSubRed = 'N/A'
+            wildcardBinario = 'N/A';
+            direccionBroadcastDec = 'N/A';
+            direccionBroadcastBin = 'N/A';
+            numSubRed = 'N/A';
+            hostMin = 'N/A';
+            hostMax = 'N/A';
             
 
 
             
             // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
             mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta,
-                 direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed);
+                 direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax);
             
         }else{
          // Calcular wildcard
@@ -267,23 +269,40 @@ document.getElementById('calcular').addEventListener('click', () => {
         let direccionBroadcastDec = decimal(broadBin1, broadBin2, broadBin3, broadBin4);
 
         //calcular numero de subredes
+        let defmasc = ''; 
+
         if (clase === 'Clase A'){
-            let defmasc = 8;
+            defmasc = 8;
         }else if(clase === 'Clase B'){
             defmasc = 16;
         }else if(clase === 'Clase C'){
             defmasc = 24;
+        }else{
+            defmasc = '';
         }
+
 
         let bitsExtra = cidrval - defmasc;
         numSubRed = Math.pow(2, bitsExtra);
 
         //calcular host minimo
-        let nuevoRedBin = parseInt(redbin4, 2) + 1;
-        let hostMin = `${decimal2(redbin1, redbin2, redbin3)}.${nuevoRedBin}`
+        let dec1 = parseInt(redbin1, 2);
+        let dec2 = parseInt(redbin2, 2);
+        let dec3 = parseInt(redbin3, 2);
+        let dec4 = parseInt(redbin4, 2) + 1;
+
+        let hostMin = `${dec1}.${dec2}.${dec3}.${dec4}`;
+        //calcular host maximo
+        let brdec1 = parseInt(broadBin1, 2);
+        let brdec2 = parseInt(broadBin2, 2);
+        let brdec3 = parseInt(broadBin3, 2);
+        let brdec4 = parseInt(broadBin4, 2) - 1;
+        
+        let hostMax = `${brdec1}.${brdec2}.${brdec3}.${brdec4}`
+
         // Llamar a la función que muestra la ventana emergente con los datos hasta wildcard
         mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta,
-             direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed);
+             direccionRedDec, direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax);
         }
 
         
@@ -306,13 +325,7 @@ document.getElementById('calcular').addEventListener('click', () => {
         const resultado = `${dec}.${dec2}.${dec3}.${dec4}`
         return resultado;
     }   
-        function decimal2(n1, n2, n3){
-        let dec = parseInt(n1, 2);
-        let dec2 = parseInt(n2, 2);
-        let dec3 = parseInt(n3, 2);
-        const resultado = `${dec}.${dec2}.${dec3}`
-        return resultado;
-    } 
+
 });
 
 
@@ -320,7 +333,7 @@ document.getElementById('calcular').addEventListener('click', () => {
 
 //función para mostrar la ventana emergente
 function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binarioCompletoColoreado, mascaraCompleta, direccionRedDec, 
-    direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed) {
+    direccionRedBinario, wildcardBinario, direccionBroadcastDec, direccionBroadcastBin, numHosts, numSubRed, hostMin, hostMax) {
     const ventanaEmergente = document.createElement('div');
     ventanaEmergente.classList.add('ventana-emergente');
     ventanaEmergente.setAttribute('id', 'resultados');
@@ -339,6 +352,8 @@ function mostrarVentanaEmergente(ip, clase, mascara, direccion, wildcard, binari
     <p><strong>Dirección de broadcast:</strong>${direccionBroadcastDec}<br><strong>Binario: </strong>${direccionBroadcastBin}</p>
     <p><strong>Clase:</strong> ${clase}</p>
     <p><strong>Nº Hosts:</strong>${numHosts}</p>
+    <p><strong>Host mínimo: </strong>${hostMin}</p>
+    <p><strong>Host máximo: </strong>${hostMax}</p>
     <p><strong>Nº De Subredes</strong> ${numSubRed}</p>
     <button id="cerrarVentana">Cerrar</button>
     `;

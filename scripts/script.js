@@ -1,5 +1,8 @@
 const inputs = document.querySelectorAll('#octeto1, #octeto2, #octeto3, #octeto4');
 const input = document.getElementById('ipCompleta');
+const cidr = document.getElementById('cidr');
+const cidrval = document.getElementById('cidr').value;
+
 
 input.addEventListener('input', () => {
     const ipCompleta = input.value.trim();
@@ -16,6 +19,20 @@ input.addEventListener('input', () => {
         input.style.borderColor = '#00ff00';
         input.style.boxShadow = '0 0 5px #00ff00';
         input.style.color = '#00ff00';
+    }
+});
+
+cidr.addEventListener('input', () => {
+    const cidrok = cidr.value.trim();
+
+    if (isNaN(cidrok) || cidrok < 8 || cidrok > 30) {
+        cidr.style.borderColor = 'red';
+        cidr.style.boxShadow = '0 0 5px red';
+        cidr.style.color = 'red';
+    }else{
+        cidr.style.borderColor = '#00ff00';
+        cidr.style.boxShadow = '0 0 5px #00ff00';
+        cidr.style.color = '#00ff00';
     }
 });
 

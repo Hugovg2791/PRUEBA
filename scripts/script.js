@@ -7,20 +7,45 @@ const cidr = document.getElementById('cidr');
 input.addEventListener('input', () => {
     const ipCompleta = input.value.trim();
     const octetos = ipCompleta.split('.').map(octeto => parseInt(octeto));
+    
+    // Validar IP: Debe tener 4 octetos y cada uno entre 0 y 255
+    const esValida = (
+        octetos.length === 4 &&
+        octetos.every(octeto => !isNaN(octeto) && octeto >= 0 && octeto <= 255)
+    );
 
-    if (
-        octetos.length !== 4 || 
-        octetos.some(octeto => isNaN(octeto) || octeto < 0 || octeto > 255)
-    ) {
+    if (!esValida) {
         input.style.borderColor = 'red';
         input.style.boxShadow = '0 0 5px red';
         input.style.color = 'red';
-    } else {
-        input.style.borderColor = '#00ff00';
-        input.style.boxShadow = '0 0 5px #00ff00';
-        input.style.color = '#00ff00';
+        cidr.value = '';  
+        return;          
     }
+
+    // Si la IP es válida, ponemos estilos verdes
+    input.style.borderColor = '#00ff00';
+    input.style.boxShadow = '0 0 5px #00ff00';
+    input.style.color = '#00ff00';
+
+    const primerOcteto = octetos[0];
+    let cidrValue = '';
+
+    if (primerOcteto >= 1 && primerOcteto <= 126) {
+        cidrValue = 8;
+    } else if (primerOcteto === 127) {
+        
+        cidrValue = 'Loopback';
+    } else if (primerOcteto >= 128 && primerOcteto <= 191) {
+        cidrValue = 16;
+    } else if (primerOcteto >= 192 && primerOcteto <= 223) {
+        cidrValue = 24;
+    } else {
+        cidrValue = 'Rango no soportado';  
+    }
+
+    cidr.value = cidrValue;
 });
+
 
 cidr.addEventListener('input', () => {
     const cidrok = cidr.value.trim();
